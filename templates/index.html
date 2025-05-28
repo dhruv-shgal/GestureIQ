@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GesturePro - Advanced Presentation Control System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        :root {
+            --primary: #6c63ff;
+            --secondary: #ff6584;
+            --accent: #43e97b;
+            --dark: #2f3640;
+            --light: #f5f6fa;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+        
+        .hero {
+            height: 85vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            background: linear-gradient(to right, rgba(108, 99, 255, 0.1), rgba(255, 101, 132, 0.1));
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: "";
+            position: absolute;
+            width: 40%;
+            height: 40%;
+            background: rgba(108, 99, 255, 0.1);
+            border-radius: 50%;
+            top: -10%;
+            left: -10%;
+            z-index: -1;
+        }
+        
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            background: rgba(255, 101, 132, 0.1);
+            border-radius: 50%;
+            bottom: -10%;
+            right: -10%;
+            z-index: -1;
+        }
+        
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1.5rem;
+        }
+        
+        .hero-text {
+            flex: 1;
+            padding-right: 2rem;
+        }
+        
+        .hero-text h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+        
+        .hero-text p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .hero-image {
+            flex: 1;
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+        
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        
+        .slide.active {
+            opacity: 1;
+        }
+        
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .slide-caption {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(108, 99, 255, 0.4);
+        }
+        
+        .section {
+            padding: 5rem 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(108, 99, 255, 0.2);
+        }
+        
+        .feature-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            z-index: -1;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            background: rgba(108, 99, 255, 0.1);
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .feature-card p {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .how-it-works {
+            background-color: white;
+            padding: 5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .how-it-works::before {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(108, 99, 255, 0.05);
+            border-radius: 50%;
+            top: -150px;
+            left: -150px;
+        }
+        
+        .how-it-works::after {
+            content: "";
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 101, 132, 0.05);
+            border-radius: 50%;
+            bottom: -100px;
+            right: -100px;
+        }
+        
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .step {
+            flex: 1;
+            min-width: 250px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .step:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            top: 70px;
+            right: 0;
+            width: 50%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .step h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .step p {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .upload-section {
+            background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .upload-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--primary);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(108, 99, 255, 0.05);
+        }
+        
+        .upload-area:hover {
+            background: rgba(108, 99, 255, 0.1);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .status-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .status-success {
+            background: rgba(67, 233, 123, 0.1);
+            color: #43e97b;
+        }
+        
+        .status-error {
+            background: rgba(255, 101, 132, 0.1);
+            color: #ff6584;
+        }
+        
+        .status-loading {
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .file-formats {
+            font-size: 0.9rem;
+            color: #888;
+        }
+        
+        .upload-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.2);
+        }
+        
+        .upload-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(108, 99, 255, 0.3);
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 1.5rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .footer-text {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+        
+        .footer-links h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-links h4::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--primary);
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #888;
+        }
+        
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .pulsing {
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .hero-text {
+                padding-right: 0;
+                margin-bottom: 2rem;
+            }
+            
+            .hero-image {
+                height: 400px;
+            }
+            
+            .step:not(:last-child)::after {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-image {
+                height: 300px;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+        
+        /* Loader Animation */
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid var(--primary);
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+            display: none;
+        }
+        
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Processing animation */
+        .processing {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .processing h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0;
+            border-radius: 10px;
+            animation: progress 3s ease-in-out infinite;
+        }
+        
+        @keyframes progress {
+            0% {
+                width: 0%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+        
+        /* Gesture visualization */
+        .gesture-demo {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 4rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .gesture-video {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            height: 300px;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .gesture-info {
+            background: rgba(108, 99, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+        }
+        
+        .gesture-info h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .gesture-list {
+            list-style: none;
+        }
+        
+        .gesture-list li {
+            margin-bottom: 1rem;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .gesture-list li::before {
+            content: "👉";
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Camera Feed (hidden by default) -->
+    <div id="camera-feed" style="display: none; justify-content: center; margin-top: 20px;">
+        <img id="video" src="{{ url_for('video_feed') }}" style="width: 640px; height: 480px; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);" alt="Camera Feed" />
+    </div>
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-hand-point-up"></i> GestureIQ
+            </div>
+            <nav class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#upload">Try Now</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="pulsing">Present With Gesture Intelligence</h1>
+                <p>Take control of your presentations with intuitive hand gestures. Our AI-powered system predicts your intent in real-time, creating seamless and interactive presentation experiences.</p>
+                <a href="#upload" class="cta-button">Get Started Now</a>
+            </div>
+            <div class="hero-image floating">
+                <div class="slideshow-container">
+                    <div class="slide active">
+                        <img src="/static/images/computer_vision_16e048b394.png" alt="AI Neural Networks" />
+                        <div class="slide-caption">Computer Vision Technology </div>
+                    </div>
+                    <div class="slide">
+                        <img src="/static/images/Artificial_Intelligence_781x512.jpg" alt="Gesture Recognition" />
+                        <div class="slide-caption">AI Processing Power</div>
+                    </div>
+                    <div class="slide">
+                        <img src="/static/images/AI-black-cloud-shutterstock_2276252513-min.jpg" alt="Computer Vision" />
+                        <div class="slide-caption">Computer Vision Technology</div>
+                    </div>
+                    <div class="slide">
+                        <img src="/static/images/gesture.png" alt="AI Processing" />
+                        <div class="slide-caption">Real-time Gesture Recognition </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="section" id="features">
+        <h2 class="section-title">Powerful Features</h2>
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-hand"></i>
+                </div>
+                <h3>Natural Gesture Control</h3>
+                <p>Control your slides with intuitive hand movements. No more remote controls or keyboard shortcuts needed.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>Intent Prediction</h3>
+                <p>Our AI system predicts your presentation intentions in real-time, making transitions smoother than ever.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-magic"></i>
+                </div>
+                <h3>Dynamic Animations</h3>
+                <p>Trigger beautiful animations with simple gestures to make your presentations more engaging.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Interactive Charts</h3>
+                <p>Point to emphasize data points or use pinch gestures to zoom into important details on charts.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-draw-polygon"></i>
+                </div>
+                <h3>Drawing Mode</h3>
+                <p>Highlight key concepts by drawing directly on your slides with finger tracking technology.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-file-powerpoint"></i>
+                </div>
+                <h3>Compatible Formats</h3>
+                <p>Works with PowerPoint, PDF, Google Slides, and many other presentation formats.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="how-it-works" id="how-it-works">
+        <div class="section">
+            <h2 class="section-title">How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Upload Presentation</h3>
+                    <p>Simply upload your existing presentation file to our system.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Calibrate Camera</h3>
+                    <p>Our system will quickly calibrate to recognize your hand movements.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Present Naturally</h3>
+                    <p>Use intuitive gestures to control your slides and trigger animations.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Engage Your Audience</h3>
+                    <p>Create memorable presentations with seamless control and dynamic effects.</p>
+                </div>
+            </div>
+            
+            <div class="gesture-demo">
+                <div class="gesture-video">
+                    <img src="/static/images/jimaging-06-00073-g009.png" alt="AI Computer Vision" style="width: 100%; height: 100%; object-fit: cover;" />
+                </div>
+                <div class="gesture-info">
+                    <h3>AI-Powered Gesture Recognition</h3>
+                    <ul class="gesture-list">
+                        <li>Advanced Computer Vision Algorithms</li>
+                        <li>Real-time Hand Tracking</li>
+                        <li>Deep Learning Models</li>
+                        <li>Gesture Intent Prediction</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="upload-section" id="upload">
+        <div class="section" style="display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: center; gap: 40px;">
+            <div style="flex: 1; min-width: 350px;">
+                <h2 class="section-title">Upload Your Presentation</h2>
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="upload-container">
+                        <div class="upload-area" id="dropArea">
+                            <i class="fas fa-file-powerpoint upload-icon"></i>
+                            <h3>Drag & Drop your PowerPoint file here</h3>
+                            <p>or</p>
+                            <button type="button" class="cta-button" id="uploadBtn">Browse Files</button>
+                            <input type="file" id="fileInput" name="ppt" accept=".ppt,.pptx" class="hidden">
+                        </div>
+                        <div id="status" class="status-message hidden"></div>
+                    </div>
+                </form>
+            </div>
+            <div id="camera-feed-side" style="display: none; flex: 1; min-width: 350px; justify-content: center; align-items: center;">
+                <img id="video-side" src="{{ url_for('video_feed') }}" style="width: 640px; height: 480px; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);" alt="Camera Feed" />
+            </div>
+        </div>
+    </section>
+    
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-hand-point-up"></i> GestureIQ
+            </div>
+            <div class="footer-text">
+                Transform your presentations with the power of AI and gesture control.
+            </div>
+           
+        </div>
+        
+        <div class="copyright">
+            &copy; 2025 GestureIQ. All rights reserved.
+        </div>
+    </footer>
+    <script src="/static/js/main.js"></script>
+    <script>
+        // Slideshow functionality
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        // Change slide every 5 seconds
+        setInterval(nextSlide, 5000);
+
+        // Show first slide immediately
+        showSlide(0);
+
+        // Show camera feed after successful upload
+        function showCameraFeed() {
+            document.getElementById('camera-feed-side').style.display = 'flex';
+        }
+
+        // Patch upload success handler
+        const uploadForm = document.getElementById('uploadForm');
+        if (uploadForm) {
+            uploadForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // ... existing upload logic ...
+                // On success:
+                showCameraFeed();
+            });
+        }
+    </script>
+</body>
+</html>
